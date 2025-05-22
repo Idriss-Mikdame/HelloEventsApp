@@ -7,29 +7,31 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
-public class Utilisateur implements UserDetails {
+public class Utilisateur  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String nom;
     private String email;
-    @Enumerated(EnumType.STRING)
-    private Role role;
     private String motdepasse;
-    @OneToMany(mappedBy = "utilisateur")
-    private List<Reservation> reservations;
-    @OneToMany(mappedBy = "utilisateur")
-    private List<Evenement> evenements;
-    public Utilisateur() {}
+    @Enumerated(EnumType.STRING)
+    public Role role;
 
-    public Utilisateur(Long id, String email, List<Reservation> reservations, String motdepasse) {
+    public Utilisateur(Long id, String nom, String email, String motdepasse, Role role) {
         this.id = id;
+        this.nom = nom;
         this.email = email;
-        this.reservations = reservations;
         this.motdepasse = motdepasse;
+        this.role = role;
+    }
+
+    public Utilisateur() {
+
     }
 
     public Long getId() {
@@ -40,20 +42,20 @@ public class Utilisateur implements UserDetails {
         this.id = id;
     }
 
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
     }
 
     public String getMotdepasse() {
@@ -64,54 +66,11 @@ public class Utilisateur implements UserDetails {
         this.motdepasse = motdepasse;
     }
 
-    public List<Reservation> getReservations() {
-        return reservations;
+    public Role getRole() {
+        return role;
     }
 
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
-    }
-
-    public List<Evenement> getEvenements() {
-        return evenements;
-    }
-
-    public void setEvenements(List<Evenement> evenements) {
-        this.evenements = evenements;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
-    }
-
-    @Override
-    public String getPassword() {
-        return "motdepasse";
-    }
-
-    @Override
-    public String getUsername() {
-        return "email";
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true ;
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

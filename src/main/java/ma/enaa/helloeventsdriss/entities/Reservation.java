@@ -11,23 +11,23 @@ import java.util.Date;
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long idreservation;
     public Date reseravtionDate;
     public int reservationNumber;
     @ManyToOne
-    private Utilisateur utilisateur;
+    private Client client;
     @ManyToOne
     private Evenement evenement;
 
     public Reservation() {
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdreservation() {
+        return idreservation;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdreservation(Long idreservation) {
+        this.idreservation = idreservation;
     }
 
     public Date getReseravtionDate() {
@@ -46,12 +46,12 @@ public class Reservation {
         this.reservationNumber = reservationNumber;
     }
 
-    public Utilisateur getUtilisateur() {
-        return utilisateur;
+    public Client getClient() {
+        return client;
     }
 
-    public void setUtilisateur(Utilisateur utilisateur) {
-        this.utilisateur = utilisateur;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     public Evenement getEvenement() {

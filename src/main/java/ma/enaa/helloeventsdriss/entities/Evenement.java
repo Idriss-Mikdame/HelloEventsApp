@@ -1,16 +1,11 @@
 package ma.enaa.helloeventsdriss.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
 
 @Entity
-@AllArgsConstructor
 
 public class Evenement {
     @Id
@@ -22,10 +17,10 @@ public class Evenement {
     private Date date;
     private String categorie;
     private String capacite;
-    @ManyToOne
-    private Utilisateur utilisateur;
-    @OneToMany (mappedBy = "evenement")
+    @OneToMany(mappedBy = "evenement" , cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Reservation> reservation;
+    @ManyToOne
+    private Admin admin;
 
     public Evenement() {
     }
@@ -86,19 +81,19 @@ public class Evenement {
         this.capacite = capacite;
     }
 
-    public Utilisateur getUtilisateur() {
-        return utilisateur;
-    }
-
-    public void setUtilisateur(Utilisateur utilisateur) {
-        this.utilisateur = utilisateur;
-    }
-
     public List<Reservation> getReservation() {
         return reservation;
     }
 
     public void setReservation(List<Reservation> reservation) {
         this.reservation = reservation;
+    }
+
+    public Admin getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
     }
 }
