@@ -13,6 +13,8 @@ public class ReservationDto   {
     private  Long idreservation;
     private  Date reseravtionDate;
     private  int reservationNumber;
+    private Long iduser;
+    private Long idevent;
 
     public ReservationDto() {
     }
@@ -39,5 +41,21 @@ public class ReservationDto   {
 
     public void setReservationNumber(int reservationNumber) {
         this.reservationNumber = reservationNumber;
+    }
+
+    public Long getIduser() {
+        return iduser;
+    }
+
+    public void setIduser(Long iduser) {
+        this.iduser = iduser;
+    }
+
+    public Long getIdevent() {
+        return idevent;
+    }
+
+    public void setIdevent(Long idevent) {
+        this.idevent = idevent;
     }
 }
