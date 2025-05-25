@@ -3,6 +3,7 @@ package ma.enaa.helloeventsdriss.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import ma.enaa.helloeventsdriss.DTO.ReservationDto;
 
 import java.util.Date;
 
@@ -21,6 +22,10 @@ public class Reservation {
 
     public Reservation() {
     }
+
+    public Reservation(Object o, Client client, Evenement event) {
+    }
+
 
     public Long getIdreservation() {
         return idreservation;

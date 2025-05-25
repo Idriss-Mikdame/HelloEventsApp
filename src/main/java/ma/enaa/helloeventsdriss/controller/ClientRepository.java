@@ -38,7 +38,7 @@ public class ClientRepository {
         return clientServices.updateClient(id, clientDto);
     }
 
-    @DeleteMapping
+    @DeleteMapping("{id}")
     public void deleteClient(@PathVariable  Long id) {
         clientServices.deleteClient(id);
     }

@@ -2,6 +2,7 @@ package ma.enaa.helloeventsdriss.DTO;
 
 import lombok.Value;
 import ma.enaa.helloeventsdriss.entities.Reservation;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -18,7 +19,11 @@ public class ReservationDto   {
 
     public ReservationDto() {
     }
-
+    public ReservationDto(Long idreservation, Long iduser, Long idevent) {
+        this.idreservation = idreservation;
+        this.iduser = iduser;
+        this.idevent = idevent;
+    }
     public Long getIdreservation() {
         return idreservation;
     }

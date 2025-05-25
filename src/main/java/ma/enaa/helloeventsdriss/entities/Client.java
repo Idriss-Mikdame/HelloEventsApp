@@ -32,4 +32,5 @@ public class Client extends Utilisateur{
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
     }
+
 }

@@ -22,7 +22,7 @@ public class ClientServices {
     }
     @Transactional
     public ClientDto saveClient(ClientDto clientDto) {
-        Client client = clientMapper.toClinetentity(clientDto); // Correction du nom de méthode
+        Client client = clientMapper.toClinetentity(clientDto);
         Client savedClient = clinetRepository.save(client);     // Correction de saveAll -> save
         return clientMapper.toClientDto(savedClient);           // Conversion retour DTO
     }
@@ -35,9 +35,7 @@ public class ClientServices {
     }
 
     public ClientDto getClientById(Long id) {
-        return clinetRepository.findAll().stream()
-                .map(clientMapper::toClientDto)
-                .findAny().orElseThrow();
+        return clinetRepository.findById(id).map(clientMapper::toClientDto).orElse(null);
     }
 
    public ClientDto updateClient(Long id, ClientDto clientDto) {
