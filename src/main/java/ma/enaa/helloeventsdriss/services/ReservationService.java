@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 
 import ma.enaa.helloeventsdriss.DTO.ReservationDto;
 import ma.enaa.helloeventsdriss.Mapper.ReservationMapper;
+import ma.enaa.helloeventsdriss.entities.Client;
 import ma.enaa.helloeventsdriss.entities.Reservation;
 import ma.enaa.helloeventsdriss.repository.ClinetRepository;
 import ma.enaa.helloeventsdriss.repository.EvenementRepository;
@@ -19,10 +20,10 @@ import static java.util.Arrays.stream;
 @Service
 public class ReservationService {
 
-        private final ReservationsRepository reservationsRepository;
-        private final ClinetRepository clientRepository;
-        private final EvenementRepository evenementRepository;
-        private ReservationMapper reservationMapper;
+    private final ReservationsRepository reservationsRepository;
+    private final ClinetRepository clientRepository;
+    private final EvenementRepository evenementRepository;
+    private ReservationMapper reservationMapper;
 
     public ReservationService(ReservationsRepository reservationsRepository, ClinetRepository clientRepository, EvenementRepository evenementRepository, ReservationMapper reservationMapper) {
         this.reservationsRepository = reservationsRepository;
@@ -38,14 +39,13 @@ public class ReservationService {
         var event = evenementRepository.findById(reservationDto.getIdevent())
                 .orElseThrow(() -> new RuntimeException("Événement non trouvé avec l'ID : " + reservationDto.getIdevent()));
 
-        int reservationCount = reservationsRepository.countByEvenement(event);
-        int reservationNumber = reservationCount + 1;
+
 
         Reservation reservation = new Reservation();
         reservation.setClient(client);
         reservation.setEvenement(event);
         reservation.setReseravtionDate(new Date());
-        reservation.setReservationNumber(reservationNumber);
+        reservation.setReservationNumber(reservationDto.getReservationNumber());
 
         var res = reservationsRepository.save(reservation);
 
@@ -64,12 +64,14 @@ public class ReservationService {
         return reservationsRepository.findAll().stream()
                 .map(reservationMapper::reservationToDto)
                 .collect(Collectors.toList());
-        }
+    }
 
     public ReservationDto getReservationById(Long id) {
         return reservationsRepository.findById(id)
                 .map(res->reservationMapper.reservationToDto(res))
                 .orElseThrow(()->new RuntimeException(""));
-      }
-
+    }
+    public void deleteReservationById(Long id) {
+        reservationsRepository.deleteById(id);
+    }
 }

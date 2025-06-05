@@ -43,6 +43,7 @@ public class ClientServices {
         client.setNom(clientDto.getNom());
         client.setEmail(clientDto.getEmail());
         client.setMotdepasse(clientDto.getMotdepasse());
+       clinetRepository.save(client);
         return clientMapper.toClientDto(client);
    }
 

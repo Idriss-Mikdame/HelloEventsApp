@@ -7,9 +7,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * DTO for {@link Reservation}
- */
+
 public class ReservationDto   {
     private  Long idreservation;
     private  Date reseravtionDate;

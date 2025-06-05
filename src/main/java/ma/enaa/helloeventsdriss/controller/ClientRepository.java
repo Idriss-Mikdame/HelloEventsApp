@@ -7,9 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin("*")
 @RestController
-@RequestMapping("/client")
+@RequestMapping("/api/v1/clients")
 public class ClientRepository {
 
     public ClientServices clientServices;
@@ -17,7 +17,7 @@ public class ClientRepository {
         this.clientServices = clientServices;
     }
 
-    @GetMapping("allClients")
+    @GetMapping
     public List<ClientDto> getAllClients() {
 
         return clientServices.getAllClients();
@@ -28,12 +28,13 @@ public class ClientRepository {
 
     }
 
-    @GetMapping("/get-by-id")
-    public ClientDto getClientById(@RequestParam("id") Long id) {
+    @GetMapping("/{id}")
+    public ClientDto getClientById(@PathVariable("id") Long id) {
+
         return clientServices.getClientById(id);
     }
 
-    @PutMapping
+    @PutMapping("{id}")
     public ClientDto updateClient(@PathVariable  Long id,@RequestBody ClientDto clientDto) {
         return clientServices.updateClient(id, clientDto);
     }

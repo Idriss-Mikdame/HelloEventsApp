@@ -7,9 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin("*")
 @RestController
-@RequestMapping("/Event")
+@RequestMapping("/api/v1/events")
 public class EventController {
 
 
@@ -25,22 +25,24 @@ public class EventController {
         return ResponseEntity.ok(savedEvent);
     }
 
-        @GetMapping("allEvents")
+        @GetMapping
         public List<EvenementDto> getAllEvents() {
-            return eventService.listerEvenements();
+
+        return eventService.listerEvenements();
         }
         @GetMapping("/{id}")
         public EvenementDto getEventById(@PathVariable Long id) {
-            return eventService.getEvenementById(id);
+
+        return eventService.getEvenementById(id);
         }
 
-        @PutMapping
+        @PutMapping("/{id}")
         public EvenementDto updateEvent(@PathVariable Long id ,@RequestBody EvenementDto eventDto) {
 
             return eventService.updateEvenement(id, eventDto);
         }
 
-        @DeleteMapping
+        @DeleteMapping("{id}")
        public void deleteEvent(@PathVariable Long id) {
             eventService.deleteEvenement(id);
         }
