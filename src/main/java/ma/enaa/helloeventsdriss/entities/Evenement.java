@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-
 public class Evenement {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
