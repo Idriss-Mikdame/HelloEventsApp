@@ -24,12 +24,22 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/**", "/api/v1/Demo/**").permitAll()
-                .requestMatchers("/api/v1/clients/**", "/api/v1/events/**", "/api/v1/reservations/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        // Public endpoints
+                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/events/**").permitAll() // Allow viewing events without authentication
+
+                        // Client endpoints
+                        .requestMatchers("/api/v1/clients/{id}").hasAnyRole("CLIENT", "ADMIN") // View profile
+                        .requestMatchers("/api/v1/reservations/**").hasRole("CLIENT") // All reservation operations
+
+                        // Admin endpoints
+                        .requestMatchers("/api/v1/events/**").hasRole("ADMIN") // All other event operations
+                        .requestMatchers("/api/v1/clients/**").hasRole("ADMIN") // Admin: add, update, delete, list
+                        .anyRequest().authenticated()
+                )
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
