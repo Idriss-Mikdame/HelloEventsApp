@@ -8,6 +8,7 @@ import ma.enaa.helloeventsdriss.repository.UtilisateurRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,19 +27,31 @@ public class AutehnticateServices {
 
 
     public AuthenticationResponse register(RegisterRequest registerRequest) {
+        if (registerRequest.getRole() == null) {
+            throw new IllegalArgumentException("Le rôle est obligatoire");
+        }
+
         var user = Utilisateur.builder()
                 .nom(registerRequest.getNom())
                 .email(registerRequest.getEmail())
                 .motdepasse(encoder.encode(registerRequest.getMotdepasse()))
-                .role(Role.CLIENT)
+                .role(registerRequest.getRole())
                 .build();
+
         repo.save(user);
-        var JwtToken = jwtServices.generateToken(user);
+
+        UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
+                .username(user.getEmail())
+                .password(user.getMotdepasse())
+                .roles(user.getRole().name()) // maintenant, on est sûr que ce n'est pas null
+                .build();
+
+        var JwtToken = jwtServices.generateToken(userDetails);
+
         return AuthenticationResponse.builder()
                 .token(JwtToken)
                 .build();
     }
-
     public AuthenticationResponse Autehnticated(AutehticationRequest registerRequest) {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(

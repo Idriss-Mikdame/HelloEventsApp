@@ -1,19 +1,23 @@
 package ma.enaa.helloeventsdriss.Auth;
 
 import lombok.Builder;
+import ma.enaa.helloeventsdriss.entities.Role;
 
 @Builder
 public class RegisterRequest {
     private String nom;
     private String email;
     private String motdepasse;
-    public RegisterRequest(String nom, String email, String motdepasse) {
+    private Role role;
+
+    public RegisterRequest() {
+    }
+
+    public RegisterRequest(String nom, String email, String motdepasse, Role role) {
         this.nom = nom;
         this.email = email;
         this.motdepasse = motdepasse;
-    }
-
-    public RegisterRequest() {
+        this.role = role;
     }
 
     public String getNom() {
@@ -38,5 +42,13 @@ public class RegisterRequest {
 
     public void setMotdepasse(String motdepasse) {
         this.motdepasse = motdepasse;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
