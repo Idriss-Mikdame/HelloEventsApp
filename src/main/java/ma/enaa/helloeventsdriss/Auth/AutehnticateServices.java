@@ -12,19 +12,21 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 public class AutehnticateServices {
     private final UtilisateurRepository repo;
     private final PasswordEncoder encoder;
     private final JwtServices jwtServices;
     private final AuthenticationManager authenticationManager;
+
     public AutehnticateServices(UtilisateurRepository repo, PasswordEncoder encoder, JwtServices jwtServices, AuthenticationManager authenticationManager) {
         this.repo = repo;
         this.encoder = encoder;
         this.jwtServices = jwtServices;
         this.authenticationManager = authenticationManager;
     }
-
 
     public AuthenticationResponse register(RegisterRequest registerRequest) {
         if (registerRequest.getRole() == null) {
@@ -40,30 +42,50 @@ public class AutehnticateServices {
 
         repo.save(user);
 
-        UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
+        UserDetails userDetails = User.builder()
                 .username(user.getEmail())
                 .password(user.getMotdepasse())
-                .roles(user.getRole().name()) // maintenant, on est sûr que ce n'est pas null
+                .roles(user.getRole().name())
                 .build();
 
-        var JwtToken = jwtServices.generateToken(userDetails);
+        // ✅ Construire manuellement les claims pour le JWT
+        Map<String, Object> extraClaims = Map.of(
+                "id", user.getId(),
+                "nom", user.getNom(),
+                "email", user.getEmail(),
+                "role", user.getRole().name()
+        );
 
-        return AuthenticationResponse.builder()
-                .token(JwtToken)
-                .build();
+        String jwtToken = jwtServices.generateToken(userDetails, extraClaims);
+
+        return new AuthenticationResponse(
+                jwtToken,
+                user.getId(),
+                user.getNom(),
+                user.getEmail(),
+                user.getRole().name()
+        );
     }
+
     public AuthenticationResponse Autehnticated(AutehticationRequest registerRequest) {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            registerRequest.getEmail()
-                            , registerRequest.getMotdepasse()
-                    )
-            );
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        registerRequest.getEmail(),
+                        registerRequest.getMotdepasse()
+                )
+        );
+
         var user = repo.findByEmail(registerRequest.getEmail())
                 .orElseThrow();
-        var JwtToken = jwtServices.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(JwtToken)
-                .build();
+
+        String jwtToken = jwtServices.generateToken(user);
+
+        return new AuthenticationResponse(
+                jwtToken,
+                user.getId(),
+                user.getNom(),
+                user.getEmail(),
+                user.getRole().name()
+        );
     }
 }
